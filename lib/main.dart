@@ -1,115 +1,193 @@
 import 'package:flutter/material.dart';
 
+//Programa nuevo, a editar y subir
 void main() {
-  runApp(const MyApp());
+  var registro = new RegisterPage();
+  runApp(registro);
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+GlobalKey<FormState> keyForm = new GlobalKey();
 
-  // This widget is the root of your application.
+class RegisterPage extends StatefulWidget {
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+//Variables
+  TextEditingController nombreCtrl = new TextEditingController();
+  TextEditingController correoCtrl = new TextEditingController();
+  TextEditingController numHabCtrl = new TextEditingController();
+  TextEditingController numVacCtrl = new TextEditingController();
+  TextEditingController direcionCtrl = new TextEditingController();
+  TextEditingController postalCtrl = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+      home: new Scaffold(
+        appBar: new AppBar(
+          title: new Text('Registrar Datos Vacunas'),
+          centerTitle: true,
+        ),
+        body: new SingleChildScrollView(
+          child: new Container(
+            margin: new EdgeInsets.all(25.0),
+            child: new Form(
+              key: keyForm,
+              child: formUI(),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  formItemsDesign(icon, item) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 7),
+      child: Card(child: ListTile(leading: Icon(icon), title: item)),
+    );
+  }
+
+  //Todo nuestro formulario
+  Widget formUI() {
+    return Column(
+      children: <Widget>[
+        formItemsDesign(
+            Icons.person,
+            TextFormField(
+              controller: nombreCtrl,
+              decoration: new InputDecoration(
+                labelText: 'Nombre completo:',
+              ),
+              validator: validateName,
+            )),
+        formItemsDesign(
+            Icons.email,
+            TextFormField(
+              controller: correoCtrl,
+              decoration: new InputDecoration(
+                labelText: 'Correo electrónico:',
+              ),
+              validator: validateEmail,
+            )),
+        formItemsDesign(
+            Icons.people,
+            TextFormField(
+              controller: numHabCtrl,
+              decoration: new InputDecoration(
+                labelText: 'Total de habitantes:',
+              ),
+              keyboardType: TextInputType.phone,
+              validator: validateNumeroVacio,
+            )),
+        formItemsDesign(
+            Icons.coronavirus_sharp,
+            TextFormField(
+              controller: numVacCtrl,
+              decoration: new InputDecoration(
+                labelText: 'Personas vacunadas:',
+              ),
+              keyboardType: TextInputType.phone,
+              validator: validateNumeroVacio,
+            )),
+        formItemsDesign(
+            Icons.directions,
+            TextFormField(
+              controller: direcionCtrl,
+              decoration: new InputDecoration(
+                labelText: 'Dirección:',
+              ),
+              validator: validateCadenaVacia,
+            )),
+        formItemsDesign(
+            Icons.markunread_mailbox,
+            TextFormField(
+              controller: postalCtrl,
+              decoration: new InputDecoration(
+                labelText: 'Código Postal:',
+              ),
+              validator: validateNumeroVacio,
+            )),
+        GestureDetector(
+            onTap: () {
+              save();
+            },
+            child: Container(
+              margin: new EdgeInsets.all(30.0),
+              alignment: Alignment.center,
+              decoration: ShapeDecoration(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0)),
+                color: Colors.green,
+              ),
+              child: Text("Guardar",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500)),
+              padding: EdgeInsets.only(top: 10, bottom: 13),
+            ))
+      ],
+    );
+  }
+
+  String? validateName(String? value) {
+    String pattern = r'(^[a-zA-Z ]*[a-zA-Z]$)';
+    RegExp regExp = new RegExp(pattern);
+    if (value!.length == 0) {
+      return "Ingrese un nombre.";
+    } else if ((value[value.length - 1] == " ") & (value.trim().length > 1)) {
+      return "Sin espacios al final.";
+    } else if (!regExp.hasMatch(value)) {
+      return "Ingrese un nombre válido.";
+    }
+  }
+
+  String? validateCadenaVacia(String? value) {
+    String patttern = r'(^[a-zA-Z][\w\W]*[a-zA-Z0-9]$)';
+    RegExp regExp = new RegExp(patttern);
+    if (value!.length == 0) {
+      return "No puede dejar el campo vacío.";
+    } else if ((value[value.length - 1] == " ") & (value.trim().length > 1)) {
+      return "Sin espacios al final.";
+    } else if (!regExp.hasMatch(value)) {
+      return "Ingrese datos válidos.";
+    }
+  }
+
+  String? validateNumeroVacio(String? value) {
+    String patttern = r'(^[0-9]*$)';
+    RegExp regExp = new RegExp(patttern);
+    if (value!.length == 0) {
+      return "No puede dejar el campo vacío.";
+    } else if (!regExp.hasMatch(value)) {
+      return "Sólo se aceptan números.";
+    }
+  }
+
+  String? validateEmail(String? value) {
+    String pattern =
+        r'(^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$)';
+    RegExp regExp = new RegExp(pattern);
+    if (value!.length == 0) {
+      return "Ingrese un correo electrónico.";
+    } else if (!regExp.hasMatch(value)) {
+      return "Correo inválido";
+    }
+  }
+
+  //Funciones y metodos
+  save() {
+    if (keyForm.currentState!.validate()) {
+      print("Nombre: ${nombreCtrl.text}");
+      print("Correo: ${correoCtrl.text}");
+      print("Numero de habitantes: ${numHabCtrl.text}");
+      print("Vacunados: ${numVacCtrl.text}");
+      print("Direccion: ${direcionCtrl.text}");
+      print("CP: ${postalCtrl.text}");
+      keyForm.currentState!.reset();
+    }
   }
 }

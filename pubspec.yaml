@@ -30,10 +30,12 @@ dependencies:
   flutter:
     sdk: flutter
 
+  #sweet_alert_dialogs: "^0.1.0"
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  #sweetalert: ^0.0.1
 
 dev_dependencies:
   flutter_test:
