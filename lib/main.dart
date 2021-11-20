@@ -1,3 +1,5 @@
+import 'package:censo_aplicacion/censo.dart';
+import 'package:censo_aplicacion/db.dart';
 import 'package:flutter/material.dart';
 
 //Programa nuevo, a editar y subir
@@ -181,6 +183,23 @@ class _RegisterPageState extends State<RegisterPage> {
   //Funciones y metodos
   save() {
     if (keyForm.currentState!.validate()) {
+      String nombre = nombreCtrl.text;
+      String correo = correoCtrl.text;
+      int habitantes = int.parse(numHabCtrl.text);
+      int vacunados = int.parse(numVacCtrl.text);
+      String direccion = direcionCtrl.text;
+      int cp = int.parse(postalCtrl.text);
+
+      Censo censo = Censo(
+        nombre,
+        correo,
+        habitantes,
+        vacunados,
+        direccion,
+        cp
+      );
+
+      DB.insert(censo);
       print("Nombre: ${nombreCtrl.text}");
       print("Correo: ${correoCtrl.text}");
       print("Numero de habitantes: ${numHabCtrl.text}");
