@@ -24,6 +24,15 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController direcionCtrl = new TextEditingController();
   TextEditingController postalCtrl = new TextEditingController();
 
+  cargarCensos() async {
+    List<Censo> auxCenso = await DB.censos();
+
+    for (var i=0; i<auxCenso.length; i++) {
+      print(auxCenso[i]);
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -200,6 +209,7 @@ class _RegisterPageState extends State<RegisterPage> {
       );
 
       DB.insert(censo);
+      cargarCensos();
       print("Nombre: ${nombreCtrl.text}");
       print("Correo: ${correoCtrl.text}");
       print("Numero de habitantes: ${numHabCtrl.text}");
