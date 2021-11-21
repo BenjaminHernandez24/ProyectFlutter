@@ -115,8 +115,6 @@ class Botones extends StatelessWidget {
   }
 }
 
-GlobalKey<FormState> keyForm = new GlobalKey();
-
 class RegisterPage extends StatefulWidget {
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -124,6 +122,7 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
 //Variables
+  GlobalKey<FormState> keyForm = new GlobalKey();
   TextEditingController nombreCtrl = new TextEditingController();
   TextEditingController correoCtrl = new TextEditingController();
   TextEditingController numHabCtrl = new TextEditingController();
@@ -144,8 +143,18 @@ class _RegisterPageState extends State<RegisterPage> {
     return MaterialApp(
       home: new Scaffold(
         appBar: new AppBar(
-          title: new Text('Registrar Datos Vacunas'),
-          centerTitle: true,
+          actions: [
+            Container(
+                child: new Text("Registrar Datos Vacunas",
+                    style: TextStyle(fontSize: 20)),
+                width: 250.0,
+                height: 30.0,
+                margin: EdgeInsets.only(top: 16.0, right: 5.0)),
+          ],
+          title: Container(
+            child: atraS(),
+            width: 50.0,
+          ),
         ),
         body: new SingleChildScrollView(
           child: new Container(
@@ -164,6 +173,28 @@ class _RegisterPageState extends State<RegisterPage> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 7),
       child: Card(child: ListTile(leading: Icon(icon), title: item)),
+    );
+  }
+
+  //Boton atras dek formulario
+  Widget atraS() {
+    return Column(
+      children: <Widget>[
+        RaisedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyApp()),
+            );
+          },
+          child: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+            size: 25,
+          ),
+          color: Colors.blue,
+        ),
+      ],
     );
   }
 
