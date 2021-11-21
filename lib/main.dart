@@ -1,14 +1,119 @@
 import 'package:censo_aplicacion/censo.dart';
 import 'package:censo_aplicacion/db.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/src/material/colors.dart';
 
 //Programa nuevo, a editar y subir
 void main() {
-  var registro = new RegisterPage();
-  runApp(registro);
+  //var registro = new RegisterPage();
+  runApp(const MyApp());
+  //runApp(registro);
 }
 
-GlobalKey<FormState> keyForm = new GlobalKey();
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Censo Vacunas',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const MyHomePage(title: 'Censo Vacunas'),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  int _counter = 0;
+
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+          backgroundColor: Colors.blue[400],
+        ),
+        backgroundColor: Colors.blue[100], //Color de fondo
+        body: Container(
+          padding: EdgeInsets.all(30.0),
+          child: GridView.count(
+            crossAxisCount: 2,
+            children: <Widget>[
+              Botones(
+                title1: "Registrar Datos",
+                icon1: Icons.article_outlined,
+                color: Colors.blue,
+              ),
+              Botones(
+                title1: "Visualizar Datos",
+                icon1: Icons.assessment,
+                color: Colors.blue,
+              ),
+            ],
+          ),
+        ));
+  }
+}
+
+class Botones extends StatelessWidget {
+  final String title1;
+  final IconData? icon1;
+  final MaterialColor? color;
+  Botones({this.title1 = "", this.icon1, this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.all(8.0),
+      child: InkWell(
+        onTap: () {
+          switch (title1) {
+            case "Registrar Datos":
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => RegisterPage()),
+              );
+              break;
+            case "Visualizar Datos":
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => RegisterPage()),
+                //MaterialPageRoute(builder: (context) => const Consultar()),
+              );
+              break;
+          }
+        }, //acción del "Onclick" del widget Card
+        splashColor: Colors.grey[10],
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Icon(icon1, size: 70.0, color: color),
+              Text(title1, style: new TextStyle(fontSize: 12.0))
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -17,6 +122,7 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
 //Variables
+  GlobalKey<FormState> keyForm = new GlobalKey();
   TextEditingController nombreCtrl = new TextEditingController();
   TextEditingController correoCtrl = new TextEditingController();
   TextEditingController numHabCtrl = new TextEditingController();
@@ -27,19 +133,28 @@ class _RegisterPageState extends State<RegisterPage> {
   cargarCensos() async {
     List<Censo> auxCenso = await DB.censos();
 
-    for (var i=0; i<auxCenso.length; i++) {
+    for (var i = 0; i < auxCenso.length; i++) {
       print(auxCenso[i]);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: new Scaffold(
         appBar: new AppBar(
-          title: new Text('Registrar Datos Vacunas'),
-          centerTitle: true,
+          actions: [
+            Container(
+                child: new Text("Registrar Datos Vacunas",
+                    style: TextStyle(fontSize: 20)),
+                width: 250.0,
+                height: 30.0,
+                margin: EdgeInsets.only(top: 16.0, right: 5.0)),
+          ],
+          title: Container(
+            child: atraS(),
+            width: 50.0,
+          ),
         ),
         body: new SingleChildScrollView(
           child: new Container(
@@ -58,6 +173,28 @@ class _RegisterPageState extends State<RegisterPage> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 7),
       child: Card(child: ListTile(leading: Icon(icon), title: item)),
+    );
+  }
+
+  //Boton atras dek formulario
+  Widget atraS() {
+    return Column(
+      children: <Widget>[
+        RaisedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyApp()),
+            );
+          },
+          child: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+            size: 25,
+          ),
+          color: Colors.blue,
+        ),
+      ],
     );
   }
 
@@ -199,14 +336,7 @@ class _RegisterPageState extends State<RegisterPage> {
       String direccion = direcionCtrl.text;
       int cp = int.parse(postalCtrl.text);
 
-      Censo censo = Censo(
-        nombre,
-        correo,
-        habitantes,
-        vacunados,
-        direccion,
-        cp
-      );
+      Censo censo = Censo(nombre, correo, habitantes, vacunados, direccion, cp);
 
       DB.insert(censo);
       cargarCensos();
@@ -219,4 +349,10 @@ class _RegisterPageState extends State<RegisterPage> {
       keyForm.currentState!.reset();
     }
   }
+}
+
+@override
+Widget build(BuildContext context) {
+  // TODO: implement build
+  throw UnimplementedError();
 }
