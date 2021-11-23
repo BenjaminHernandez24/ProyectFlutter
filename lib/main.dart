@@ -1,5 +1,6 @@
 import 'package:censo_aplicacion/censo.dart';
 import 'package:censo_aplicacion/db.dart';
+import 'package:censo_aplicacion/ver_datos.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/material/colors.dart';
 
@@ -94,7 +95,7 @@ class Botones extends StatelessWidget {
             case "Visualizar Datos":
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => RegisterPage()),
+                MaterialPageRoute(builder: (context) => verDatos()),
                 //MaterialPageRoute(builder: (context) => const Consultar()),
               );
               break;
