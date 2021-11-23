@@ -16,7 +16,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const _MyList(title: 'Lista Censos'),
+      home: new Scaffold(
+        body: _MyList(title: 'Lista Censos'),
+      ),
     );
   }
 }
